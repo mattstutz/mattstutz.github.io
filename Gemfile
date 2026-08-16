@@ -36,3 +36,11 @@ end
 gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 
 gem "minimal-mistakes-jekyll"
+
+# Essenziell für Ruby 3.x auf Linux-Servern
+gem "webrick", "~> 1.8"
+gem "bigdecimal", "~> 3.1"
+gem "mutex_m", "~> 0.2"
+
+# Verhindert SassC-Kompilierungsfehler auf Ubuntu
+gem "sassc-embedded", "~> 1.78"
