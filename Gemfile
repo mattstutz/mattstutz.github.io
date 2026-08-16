@@ -35,7 +35,16 @@ end
 # do not have a Java counterpart.
 gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 
+# Minimal Mistakes Theme
 gem "minimal-mistakes-jekyll"
+gem "jekyll-include-cache"
+
+group :jekyll_plugins do
+  gem "jekyll-feed"
+  gem "jekyll-sitemap"
+  gem "jekyll-gist"
+  gem "jekyll-paginate"
+end
 
 # Essenziell für Ruby 3.x auf Linux-Servern
 gem "webrick", "~> 1.8"
