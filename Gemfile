@@ -26,7 +26,10 @@ platforms :mingw, :x64_mingw, :mswin, :jruby do
 end
 
 # Performance-booster for watching directories on Windows
-gem "wdm", "~> 0.1", :platforms => [:mingw, :x64_mingw, :mswin]
+# Richtig (nur für Windows aktivieren):
+platforms :mswin, :mingw, :x64_mingw do
+  gem "wdm", "~> 0.1.1"
+end
 
 # Lock `http_parser.rb` gem to `v0.6.x` on JRuby builds since newer versions of the gem
 # do not have a Java counterpart.
