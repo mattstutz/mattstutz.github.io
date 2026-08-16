@@ -1,0 +1,9 @@
+main:
+  - title: "Aktuelles"
+    url: "/"
+  - title: "Portfolio"
+    url: "/portfolio/"
+  - title: "Equipment"
+    url: "/equipment/"
+  - title: "Kontakt"
+    url: "/kontakt/"

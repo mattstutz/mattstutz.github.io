@@ -1,0 +1,36 @@
+{% if post.header.teaser %}
+{% assign teaser = post.header.teaser %}
+{% else %}
+{% assign default_teaser = site.teaser %}
+{% assign teaser = default_teaser %}
+{% endif %}
+
+{% if post.id %}
+{% assign title = post.title | markdownify | strip_html %}
+{% else %}
+{% assign title = post.title %}
+{% endif %}
+
+<div class="grid__item">
+    <article class="archive__item">
+
+        <!-- 1. Das Bild ist der klickbare Link zur Unterseite -->
+        <div class="archive__item-teaser">
+            <a href="{{ post.url | relative_url }}">
+                <img src="{{ post.header.teaser | relative_url }}" alt="{{ post.header.title }}">
+            </a>
+        </div>
+
+        <!-- 2. Kein verlinkter Titel mehr, nur der Excerpt-Text -->
+        {% if post.header.title %}
+        <div class="archive__item-excerpt">
+            <p>{{ post.header.title | markdownify | strip_html }}</p>
+        </div>
+        {% elsif post.excerpt %}
+        <!-- Fallback: Falls bei einem Eintrag kein header.title existiert -->
+        <div class="archive__item-excerpt">
+            <p>{{ post.excerpt | markdownify | strip_html }}</p>
+        </div>
+        {% endif %}
+    </article>
+</div>

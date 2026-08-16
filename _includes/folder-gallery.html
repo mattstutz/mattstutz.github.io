@@ -1,0 +1,118 @@
+{% comment %}
+    Liest alle Bilder aus einem angegebenen Ordner aus und rendert das Justified Grid.
+{% endcomment %}
+
+<style>
+    .justified-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 100%;
+        clear: both;
+        margin-top: 1.5em;
+    }
+
+    .justified-container .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        margin: 0 !important;
+    }
+
+    .justified-container .gallery-item img {
+        width: 100% !important;
+        height: 100% !important;
+        display: block !important;
+        object-fit: contain !important;
+        /* Verhindert jeglichen Motiv-Anschnitt */
+        margin: 0 !important;
+    }
+</style>
+
+<div class="justified-container" id="justified-gallery">
+    {% assign folder_path = include.folder %}
+    {% for file in site.static_files %}
+    {% if file.path contains folder_path %}
+    {% unless file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.webp'
+    %}{% continue %}{% endunless %}
+    {% if file.name contains 'teaser' %}{% continue %}{% endif %}
+
+    <div class="gallery-item">
+        <img src="{{ file.path | relative_url }}" alt="{{ file.basename }}" loading="lazy">
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+<script>
+    (function () {
+        const TARGET_HEIGHT = 240; // Richt-Höhe in Pixeln (passt sich dynamisch an)
+        const GAP = 10;            // Gap zwischen den Bildern in Pixeln
+
+        function renderGallery() {
+            const container = document.getElementById('justified-gallery');
+            if (!container) return;
+
+            const containerWidth = container.clientWidth;
+            const items = Array.from(container.querySelectorAll('.gallery-item'));
+            if (items.length === 0) return;
+
+            let currentRow = [];
+            let currentRowWidth = 0;
+
+            items.forEach((item, index) => {
+                const img = item.querySelector('img');
+                // Falls das Bild noch nicht geladen ist, warte auf das Laden
+                if (!img.naturalWidth) {
+                    img.onload = renderGallery;
+                    return;
+                }
+
+                const aspectRatio = img.naturalWidth / img.naturalHeight;
+                item.dataset.aspect = aspectRatio;
+
+                const itemWidth = TARGET_HEIGHT * aspectRatio;
+
+                // Prüfe, ob das Bild noch in die aktuelle Zeile passt
+                if (currentRowWidth + itemWidth + (currentRow.length * GAP) <= containerWidth) {
+                    currentRow.push(item);
+                    currentRowWidth += itemWidth;
+                } else {
+                    // Zeile ist voll -> Höhe berechnen, damit die Zeile bündig füllt
+                    if (currentRow.length > 0) {
+                        scaleRowToFit(currentRow, currentRowWidth, containerWidth);
+                    }
+                    currentRow = [item];
+                    currentRowWidth = itemWidth;
+                }
+
+                // Letzte Zeile abfangen
+                if (index === items.length - 1 && currentRow.length > 0) {
+                    // Letzte Zeile behält die Standard-Höhe, um extreme Vergrößerungen zu vermeiden
+                    currentRow.forEach(it => {
+                        const asp = parseFloat(it.dataset.aspect);
+                        it.style.width = (TARGET_HEIGHT * asp) + 'px';
+                        it.style.height = TARGET_HEIGHT + 'px';
+                    });
+                }
+            });
+        }
+
+        function scaleRowToFit(row, rowWidth, containerWidth) {
+            const totalGaps = (row.length - 1) * GAP;
+            const availableWidth = containerWidth - totalGaps;
+            // Berechne die genaue Höhe, bei der alle Bilder der Zeile die verfügbare Breite füllen
+            const dynamicHeight = availableWidth / row.reduce((sum, item) => sum + parseFloat(item.dataset.aspect), 0);
+
+            row.forEach(item => {
+                const asp = parseFloat(item.dataset.aspect);
+                item.style.width = (dynamicHeight * asp) + 'px';
+                item.style.height = dynamicHeight + 'px';
+            });
+        }
+
+        window.addEventListener('load', renderGallery);
+        window.addEventListener('resize', renderGallery);
+        renderGallery();
+    })();
+</script>
