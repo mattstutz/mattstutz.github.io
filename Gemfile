@@ -9,26 +9,12 @@ source "https://rubygems.org"
 # Happy Jekylling!
 gem "jekyll", "~> 4.4.1"
 # This is the default theme for new Jekyll sites. You may change this to anything you like.
-gem "minima", "~> 2.5"
-# If you want to use GitHub Pages, remove the "gem "jekyll"" above and
-# uncomment the line below. To upgrade, run `bundle update github-pages`.
-# gem "github-pages", group: :jekyll_plugins
-# If you have any plugins, put them here!
-group :jekyll_plugins do
-  gem "jekyll-feed", "~> 0.12"
-end
 
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
 # and associated library.
-platforms :mingw, :x64_mingw, :mswin, :jruby do
+platforms :windows, :jruby do
   gem "tzinfo", ">= 1", "< 3"
   gem "tzinfo-data"
-end
-
-# Performance-booster for watching directories on Windows
-# Richtig (nur für Windows aktivieren):
-platforms :mswin, :mingw, :x64_mingw do
-  gem "wdm", "~> 0.1.1"
 end
 
 # Lock `http_parser.rb` gem to `v0.6.x` on JRuby builds since newer versions of the gem
@@ -37,10 +23,10 @@ gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 
 # Minimal Mistakes Theme
 gem "minimal-mistakes-jekyll"
-gem "jekyll-include-cache"
 
 group :jekyll_plugins do
   gem "jekyll-feed"
+  gem "jekyll-include-cache"
   gem "jekyll-sitemap"
   gem "jekyll-gist"
   gem "jekyll-paginate"
@@ -53,3 +39,5 @@ gem "mutex_m", "~> 0.2"
 
 # Verhindert SassC-Kompilierungsfehler auf Ubuntu
 gem "sassc-embedded", "~> 1.78"
+
+gem "faraday-retry"

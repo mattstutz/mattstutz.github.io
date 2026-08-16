@@ -27,6 +27,11 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
+      - name: Configure and Install Bundler
+        run: |
+          bundle config set --local retry 3
+          bundle config set --local timeout 10
+          bundle install
       - name: Install Dependencies
         run: |
           bundle config path vendor/bundle
